@@ -3,15 +3,12 @@ package infrastructures
 import (
 	"database/sql"
 	"fmt"
+
 	"github.com/irahardianto/service-pattern-go/interfaces"
 )
 
 type SQLiteHandler struct {
 	Conn *sql.DB
-}
-
-func (handler *SQLiteHandler) Execute(statement string) {
-	handler.Conn.Exec(statement)
 }
 
 func (handler *SQLiteHandler) Query(statement string) (interfaces.IRow, error) {
@@ -20,13 +17,28 @@ func (handler *SQLiteHandler) Query(statement string) (interfaces.IRow, error) {
 
 	if err != nil {
 		fmt.Println(err)
-		return new(SqliteRow),err
+		return new(SqliteRow), err
 	}
 	row := new(SqliteRow)
 	row.Rows = rows
 
 	return row, nil
 }
+
+// TODO - make a function that uses GORM
+// func (handler *SQLiteHandler) Get(id int) (interfaces.IRow, error) {
+// 	//fmt.Println(statement)
+// 	rows, err := handler.Conn.Query(statement)
+
+// 	if err != nil {
+// 		fmt.Println(err)
+// 		return new(SqliteRow), err
+// 	}
+// 	row := new(SqliteRow)
+// 	row.Rows = rows
+
+// 	return row, nil
+// }
 
 type SqliteRow struct {
 	Rows *sql.Rows
@@ -38,7 +50,7 @@ func (r SqliteRow) Scan(dest ...interface{}) error {
 		return err
 	}
 
-	return  nil
+	return nil
 }
 
 func (r SqliteRow) Next() bool {

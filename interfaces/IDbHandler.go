@@ -1,8 +1,8 @@
 package interfaces
 
 type IDbHandler interface {
-	Execute(statement string)
 	Query(statement string) (IRow, error)
+	// Generics? Could return an entity of type T
 }
 
 type IRow interface {

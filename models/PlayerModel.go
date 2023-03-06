@@ -1,7 +1,7 @@
 package models
 
 type PlayerModel struct {
-	Id    int
+	Id    uint `gorm:"primarykey"`
 	Name  string
 	Score int
 }

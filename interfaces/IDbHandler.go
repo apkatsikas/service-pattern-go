@@ -1,8 +1,9 @@
 package interfaces
 
+import "gorm.io/gorm"
+
 type IDbHandler interface {
-	Query(statement string) (IRow, error)
-	// Generics? Could return an entity of type T
+	Connection() *gorm.DB
 }
 
 type IRow interface {

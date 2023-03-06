@@ -5,8 +5,6 @@ import (
 	"github.com/irahardianto/service-pattern-go/interfaces"
 	"github.com/irahardianto/service-pattern-go/models"
 
-	"fmt"
-
 	_ "github.com/jinzhu/gorm/dialects/sqlite"
 )
 
@@ -21,6 +19,7 @@ func (repository *PlayerRepositoryWithCircuitBreaker) GetPlayerByName(name strin
 	errors := hystrix.Go("get_player_by_name", func() error {
 
 		player, _ := repository.PlayerRepository.GetPlayerByName(name)
+		// TODO - remove circuit breaker?
 
 		output <- player
 		return nil
@@ -40,15 +39,13 @@ type PlayerRepository struct {
 }
 
 func (repository *PlayerRepository) GetPlayerByName(name string) (models.PlayerModel, error) {
-	row, err := repository.Query(fmt.Sprintf("SELECT * FROM player_models WHERE name = '%s'", name))
-	if err != nil {
-		return models.PlayerModel{}, err
-	}
+	gormConn := repository.Connection()
 
 	var player models.PlayerModel
+	result := gormConn.First(&player, "name = ?", name)
 
-	row.Next()
-	row.Scan(&player.Id, &player.Name, &player.Score)
-
+	if result.Error != nil {
+		return player, result.Error
+	}
 	return player, nil
 }

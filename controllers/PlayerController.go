@@ -21,8 +21,8 @@ func (controller *PlayerController) GetPlayerScore(res http.ResponseWriter, req 
 
 	scores, err := controller.GetScores(player1Name, player2Name)
 	if err != nil {
-		//Handle error
+		panic(err)
 	}
 
-	json.NewEncoder(res).Encode(viewmodels.ScoresVM{scores})
+	json.NewEncoder(res).Encode(viewmodels.ScoresVM{Score: scores})
 }

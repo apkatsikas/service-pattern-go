@@ -33,4 +33,6 @@ func TestGetScore(t *testing.T) {
 	actualResult, _ := playerService.GetScores("Rafael", "Serena")
 
 	assert.Equal(t, expectedResult, actualResult)
+
+	// TODO - add tests for cant find player
 }

@@ -2,43 +2,18 @@ package infrastructures
 
 import (
 	"database/sql"
-	"fmt"
 
-	"github.com/irahardianto/service-pattern-go/interfaces"
+	"gorm.io/gorm"
 )
 
 type SQLiteHandler struct {
-	Conn *sql.DB
+	// TODO - package private?
+	Conn *gorm.DB
 }
 
-func (handler *SQLiteHandler) Query(statement string) (interfaces.IRow, error) {
-	//fmt.Println(statement)
-	rows, err := handler.Conn.Query(statement)
-
-	if err != nil {
-		fmt.Println(err)
-		return new(SqliteRow), err
-	}
-	row := new(SqliteRow)
-	row.Rows = rows
-
-	return row, nil
+func (handler *SQLiteHandler) Connection() *gorm.DB {
+	return handler.Conn
 }
-
-// TODO - make a function that uses GORM
-// func (handler *SQLiteHandler) Get(id int) (interfaces.IRow, error) {
-// 	//fmt.Println(statement)
-// 	rows, err := handler.Conn.Query(statement)
-
-// 	if err != nil {
-// 		fmt.Println(err)
-// 		return new(SqliteRow), err
-// 	}
-// 	row := new(SqliteRow)
-// 	row.Rows = rows
-
-// 	return row, nil
-// }
 
 type SqliteRow struct {
 	Rows *sql.Rows

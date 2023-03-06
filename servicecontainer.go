@@ -3,12 +3,13 @@ package main
 import (
 	"sync"
 
-	"database/sql"
-
 	"github.com/irahardianto/service-pattern-go/controllers"
 	"github.com/irahardianto/service-pattern-go/infrastructures"
 	"github.com/irahardianto/service-pattern-go/repositories"
 	"github.com/irahardianto/service-pattern-go/services"
+
+	"gorm.io/driver/sqlite"
+	"gorm.io/gorm"
 )
 
 type IServiceContainer interface {
@@ -18,16 +19,14 @@ type IServiceContainer interface {
 type kernel struct{}
 
 func (k *kernel) InjectPlayerController() controllers.PlayerController {
-
-	// TODO - make this happen in a function on sql lite handler maybe?
-	// TODO - do this https://gorm.io/docs/index.html
-	sqlConn, _ := sql.Open("sqlite3", "/var/tmp/tennis.db")
 	sqliteHandler := &infrastructures.SQLiteHandler{}
-	sqliteHandler.Conn = sqlConn
 
-	playerRepository := &repositories.PlayerRepository{sqliteHandler}
-	playerService := &services.PlayerService{&repositories.PlayerRepositoryWithCircuitBreaker{playerRepository}}
-	playerController := controllers.PlayerController{playerService}
+	db, _ := gorm.Open(sqlite.Open("/var/tmp/tennis.db"), &gorm.Config{})
+	sqliteHandler.Conn = db
+
+	playerRepository := &repositories.PlayerRepository{IDbHandler: sqliteHandler}
+	playerService := &services.PlayerService{IPlayerRepository: &repositories.PlayerRepositoryWithCircuitBreaker{PlayerRepository: playerRepository}}
+	playerController := controllers.PlayerController{IPlayerService: playerService}
 
 	return playerController
 }

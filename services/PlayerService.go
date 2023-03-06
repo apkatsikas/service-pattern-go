@@ -1,6 +1,9 @@
 package services
 
 import (
+	"errors"
+	"fmt"
+
 	"github.com/irahardianto/service-pattern-go/interfaces"
 )
 
@@ -15,12 +18,12 @@ func (service *PlayerService) GetScores(player1Name string, player2Name string) 
 
 	player1, err := service.GetPlayerByName(player1Name)
 	if err != nil {
-		//Handle error
+		return "", errors.New(fmt.Sprintf("Could not find player %v", player1Name))
 	}
 
 	player2, err := service.GetPlayerByName(player2Name)
 	if err != nil {
-		//Handle error
+		return "", errors.New(fmt.Sprintf("Could not find player %v", player2Name))
 	}
 
 	if player1.Score < 4 && player2.Score < 4 && !(player1.Score+player2.Score == 6) {

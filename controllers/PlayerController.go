@@ -15,6 +15,10 @@ type PlayerController struct {
 	interfaces.IPlayerService
 }
 
+type ResponseError struct {
+	Message string
+}
+
 // TODO - how should we handle and test negative case?
 func (controller *PlayerController) GetPlayerScore(res http.ResponseWriter, req *http.Request) {
 
@@ -26,12 +30,13 @@ func (controller *PlayerController) GetPlayerScore(res http.ResponseWriter, req 
 		// TODO - make this nice
 		if err == ce.RecordNotFoundError {
 			res.WriteHeader(http.StatusNotFound)
-			res.Write([]byte("Record not found."))
+			json.NewEncoder(res).Encode(ResponseError{Message: "Record not found."})
 			return
 		} else {
 			panic(err)
 		}
 	}
 
+	// maybe marshal instead... TODO check that
 	json.NewEncoder(res).Encode(viewmodels.ScoresVM{Score: scores})
 }

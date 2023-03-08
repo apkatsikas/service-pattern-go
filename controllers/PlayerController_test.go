@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"net/http/httptest"
 
+	ce "github.com/irahardianto/service-pattern-go/customerrors"
 	"github.com/irahardianto/service-pattern-go/interfaces/mocks"
 	"github.com/irahardianto/service-pattern-go/viewmodels"
 
@@ -42,6 +43,36 @@ func TestPlayerScore(t *testing.T) {
 	expectedResult.Score = "Forty-Fifteen"
 
 	actualResult := viewmodels.ScoresVM{}
+
+	json.NewDecoder(w.Body).Decode(&actualResult)
+
+	// assert that the expectations were met
+	assert.Equal(t, expectedResult, actualResult)
+}
+
+func TestPlayerScoreNoRecord(t *testing.T) {
+
+	// create an instance of our test object
+	playerService := new(mocks.IPlayerService)
+
+	// setup expectations
+	playerService.On("GetScores", "Rafael", "fart").Return("", ce.RecordNotFoundError)
+
+	playerController := PlayerController{playerService}
+
+	// call the code we are testing
+	req := httptest.NewRequest("GET", "http://localhost:8080/getScore/Rafael/vs/fart", nil)
+	w := httptest.NewRecorder()
+
+	r := chi.NewRouter()
+	r.HandleFunc("/getScore/{player1}/vs/{player2}", playerController.GetPlayerScore)
+
+	r.ServeHTTP(w, req)
+
+	expectedResult := ResponseError{}
+	expectedResult.Message = "Record not found."
+
+	actualResult := ResponseError{}
 
 	json.NewDecoder(w.Body).Decode(&actualResult)
 

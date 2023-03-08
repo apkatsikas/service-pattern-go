@@ -45,6 +45,9 @@ func (repository *PlayerRepository) GetPlayerByName(name string) (models.PlayerM
 	result := gormConn.First(&player, "name = ?", name)
 
 	if result.Error != nil {
+		if result.Error.Error() == "record not found" {
+			return models.PlayerModel{}, nil
+		}
 		return player, result.Error
 	}
 	return player, nil

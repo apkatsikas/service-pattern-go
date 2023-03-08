@@ -14,6 +14,7 @@ type PlayerController struct {
 	interfaces.IPlayerService
 }
 
+// TODO - how should we handle and test negative case?
 func (controller *PlayerController) GetPlayerScore(res http.ResponseWriter, req *http.Request) {
 
 	player1Name := chi.URLParam(req, "player1")

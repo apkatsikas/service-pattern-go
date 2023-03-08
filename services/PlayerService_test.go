@@ -36,3 +36,32 @@ func TestGetScore(t *testing.T) {
 
 	// TODO - add tests for cant find player
 }
+
+// TODO - try as TDD
+func TestGetScoreWrong(t *testing.T) {
+
+	playerRepository := new(mocks.IPlayerRepository)
+
+	player1 := models.PlayerModel{}
+	player1.Id = 101
+	player1.Name = "Rafael"
+	player1.Score = 3
+
+	player2 := models.PlayerModel{}
+	player2.Id = 103
+	player2.Name = "Serena"
+	player2.Score = 1
+
+	playerRepository.On("GetPlayerByName", "Rafael").Return(player1, nil)
+	playerRepository.On("GetPlayerByName", "Serena").Return(player2, nil)
+
+	playerService := PlayerService{playerRepository}
+
+	expectedResult := "Forty-Fifteen"
+
+	actualResult, _ := playerService.GetScores("Rafael", "Serena")
+
+	assert.Equal(t, expectedResult, actualResult)
+
+	// TODO - add tests for cant find player
+}

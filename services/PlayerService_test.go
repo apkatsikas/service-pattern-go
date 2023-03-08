@@ -3,6 +3,7 @@ package services
 import (
 	"testing"
 
+	ce "github.com/irahardianto/service-pattern-go/customerrors"
 	"github.com/irahardianto/service-pattern-go/interfaces/mocks"
 	"github.com/irahardianto/service-pattern-go/models"
 
@@ -37,9 +38,7 @@ func TestGetScore(t *testing.T) {
 	// TODO - add tests for cant find player
 }
 
-// TODO - try as TDD
-func TestGetScoreWrong(t *testing.T) {
-
+func TestGetScoreNoRecord(t *testing.T) {
 	playerRepository := new(mocks.IPlayerRepository)
 
 	player1 := models.PlayerModel{}
@@ -48,20 +47,17 @@ func TestGetScoreWrong(t *testing.T) {
 	player1.Score = 3
 
 	player2 := models.PlayerModel{}
-	player2.Id = 103
-	player2.Name = "Serena"
-	player2.Score = 1
 
 	playerRepository.On("GetPlayerByName", "Rafael").Return(player1, nil)
-	playerRepository.On("GetPlayerByName", "Serena").Return(player2, nil)
+	playerRepository.On("GetPlayerByName", "fart").Return(player2, ce.RecordNotFoundError)
 
 	playerService := PlayerService{playerRepository}
 
-	expectedResult := "Forty-Fifteen"
+	expectedResult := ""
 
-	actualResult, _ := playerService.GetScores("Rafael", "Serena")
+	actualResult, err := playerService.GetScores("Rafael", "fart")
 
 	assert.Equal(t, expectedResult, actualResult)
 
-	// TODO - add tests for cant find player
+	assert.NotNil(t, err)
 }

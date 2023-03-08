@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"net/http"
 
+	"github.com/irahardianto/service-pattern-go/customerrors"
 	"github.com/irahardianto/service-pattern-go/interfaces"
 
 	"github.com/go-chi/chi"
@@ -22,7 +23,13 @@ func (controller *PlayerController) GetPlayerScore(res http.ResponseWriter, req 
 
 	scores, err := controller.GetScores(player1Name, player2Name)
 	if err != nil {
-		panic(err)
+		if err == customerrors.RecordNotFoundError {
+			res.WriteHeader(http.StatusNotFound)
+			res.Write([]byte("Record not found."))
+			return
+		} else {
+			panic(err)
+		}
 	}
 
 	json.NewEncoder(res).Encode(viewmodels.ScoresVM{Score: scores})

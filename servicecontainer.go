@@ -24,8 +24,7 @@ func (k *kernel) InjectPlayerController() controllers.PlayerController {
 	db, _ := gorm.Open(sqlite.Open("/var/tmp/tennis.db"), &gorm.Config{})
 	sqliteHandler.Conn = db
 
-	playerRepository := &repositories.PlayerRepository{IDbHandler: sqliteHandler}
-	playerService := &services.PlayerService{IPlayerRepository: &repositories.PlayerRepositoryWithCircuitBreaker{PlayerRepository: playerRepository}}
+	playerService := &services.PlayerService{IPlayerRepository: &repositories.PlayerRepository{IDbHandler: sqliteHandler}}
 	playerController := controllers.PlayerController{IPlayerService: playerService}
 
 	return playerController

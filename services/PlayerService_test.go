@@ -37,6 +37,7 @@ func TestGetScore(t *testing.T) {
 
 	// Make sure we got the correct score
 	assert.Equal(t, expectedScore, actualResult)
+	// Make sure we there is no error
 	assert.Nil(t, err)
 }
 

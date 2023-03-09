@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"encoding/json"
+	"net/http"
 	"net/http/httptest"
 
 	ce "github.com/irahardianto/service-pattern-go/customerrors"
@@ -48,6 +49,7 @@ func TestPlayerScore(t *testing.T) {
 
 	// assert that the expectations were met
 	assert.Equal(t, expectedResult, actualResult)
+	assert.Equal(t, http.StatusOK, w.Result().StatusCode)
 }
 
 func TestPlayerScoreNoRecord(t *testing.T) {
@@ -78,4 +80,5 @@ func TestPlayerScoreNoRecord(t *testing.T) {
 
 	// assert that the expectations were met
 	assert.Equal(t, expectedResult, actualResult)
+	assert.Equal(t, http.StatusNotFound, w.Result().StatusCode)
 }

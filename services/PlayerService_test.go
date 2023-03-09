@@ -33,9 +33,8 @@ func TestGetScore(t *testing.T) {
 
 	actualResult, _ := playerService.GetScores("Rafael", "Serena")
 
+	// Make sure we got the correct score
 	assert.Equal(t, expectedResult, actualResult)
-
-	// TODO - add tests for cant find player
 }
 
 func TestGetScoreNoRecord(t *testing.T) {
@@ -57,7 +56,9 @@ func TestGetScoreNoRecord(t *testing.T) {
 
 	actualResult, err := playerService.GetScores("Rafael", "fart")
 
+	// Check that we got an empty player score
 	assert.Equal(t, expectedResult, actualResult)
 
-	assert.NotNil(t, err)
+	// Check that we got an error
+	assert.Equal(t, err, ce.RecordNotFoundError)
 }

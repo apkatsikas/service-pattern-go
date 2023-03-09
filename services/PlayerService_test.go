@@ -31,13 +31,40 @@ func TestGetScore(t *testing.T) {
 
 	expectedResult := "Forty-Fifteen"
 
-	actualResult, _ := playerService.GetScores("Rafael", "Serena")
+	actualResult, err := playerService.GetScores("Rafael", "Serena")
 
 	// Make sure we got the correct score
 	assert.Equal(t, expectedResult, actualResult)
+	assert.Nil(t, err)
 }
 
-func TestGetScoreNoRecord(t *testing.T) {
+func TestGetScoreNoRecordPlayer1(t *testing.T) {
+	playerRepository := new(mocks.IPlayerRepository)
+
+	player1 := models.PlayerModel{}
+
+	player2 := models.PlayerModel{}
+	player2.Id = 101
+	player2.Name = "Rafael"
+	player2.Score = 3
+
+	playerRepository.On("GetPlayerByName", "fart").Return(player1, nil)
+	playerRepository.On("GetPlayerByName", "Rafael").Return(player2, ce.RecordNotFoundError)
+
+	playerService := PlayerService{playerRepository}
+
+	expectedResult := ""
+
+	actualResult, err := playerService.GetScores("fart", "Rafael")
+
+	// Check that we got an empty player score
+	assert.Equal(t, expectedResult, actualResult)
+
+	// Check that we got an error
+	assert.Equal(t, err, ce.RecordNotFoundError)
+}
+
+func TestGetScoreNoRecordPlayer2(t *testing.T) {
 	playerRepository := new(mocks.IPlayerRepository)
 
 	player1 := models.PlayerModel{}

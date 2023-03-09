@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"encoding/json"
+	"errors"
 	"net/http"
 	"net/http/httptest"
 
@@ -52,7 +53,38 @@ func TestPlayerScore(t *testing.T) {
 	assert.Equal(t, http.StatusOK, w.Result().StatusCode)
 }
 
-func TestPlayerScoreNoRecord(t *testing.T) {
+func TestPlayerScoreNoRecordPlayer1(t *testing.T) {
+
+	// create an instance of our test object
+	playerService := new(mocks.IPlayerService)
+
+	// setup expectations
+	playerService.On("GetScores", "fart", "Rafael").Return("", ce.RecordNotFoundError)
+
+	playerController := PlayerController{playerService}
+
+	// call the code we are testing
+	req := httptest.NewRequest("GET", "http://localhost:8080/getScore/fart/vs/Rafael", nil)
+	w := httptest.NewRecorder()
+
+	r := chi.NewRouter()
+	r.HandleFunc("/getScore/{player1}/vs/{player2}", playerController.GetPlayerScore)
+
+	r.ServeHTTP(w, req)
+
+	expectedResult := ResponseError{}
+	expectedResult.Message = "Record not found."
+
+	actualResult := ResponseError{}
+
+	json.NewDecoder(w.Body).Decode(&actualResult)
+
+	// assert that the expectations were met
+	assert.Equal(t, expectedResult, actualResult)
+	assert.Equal(t, http.StatusNotFound, w.Result().StatusCode)
+}
+
+func TestPlayerScoreNoRecordPlayer2(t *testing.T) {
 
 	// create an instance of our test object
 	playerService := new(mocks.IPlayerService)
@@ -81,4 +113,35 @@ func TestPlayerScoreNoRecord(t *testing.T) {
 	// assert that the expectations were met
 	assert.Equal(t, expectedResult, actualResult)
 	assert.Equal(t, http.StatusNotFound, w.Result().StatusCode)
+}
+
+func TestPlayerScoreUnknownError(t *testing.T) {
+
+	// create an instance of our test object
+	playerService := new(mocks.IPlayerService)
+
+	// setup expectations
+	playerService.On("GetScores", "Rafael", "fart").Return("", errors.New("Weird error"))
+
+	playerController := PlayerController{playerService}
+
+	// call the code we are testing
+	req := httptest.NewRequest("GET", "http://localhost:8080/getScore/Rafael/vs/fart", nil)
+	w := httptest.NewRecorder()
+
+	r := chi.NewRouter()
+	r.HandleFunc("/getScore/{player1}/vs/{player2}", playerController.GetPlayerScore)
+
+	r.ServeHTTP(w, req)
+
+	expectedResult := ResponseError{}
+	expectedResult.Message = "Unexpected error."
+
+	actualResult := ResponseError{}
+
+	json.NewDecoder(w.Body).Decode(&actualResult)
+
+	// assert that the expectations were met
+	assert.Equal(t, expectedResult, actualResult)
+	assert.Equal(t, http.StatusInternalServerError, w.Result().StatusCode)
 }

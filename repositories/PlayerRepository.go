@@ -22,7 +22,7 @@ func (repository *PlayerRepository) GetPlayerByName(name string) (*models.Player
 		if result.Error.Error() == "record not found" {
 			return nil, customerrors.RecordNotFoundError
 		}
-		return &player, result.Error
+		return nil, result.Error
 	}
 	return &player, nil
 }

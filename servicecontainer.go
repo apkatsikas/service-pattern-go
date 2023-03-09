@@ -7,9 +7,6 @@ import (
 	"github.com/irahardianto/service-pattern-go/infrastructures"
 	"github.com/irahardianto/service-pattern-go/repositories"
 	"github.com/irahardianto/service-pattern-go/services"
-
-	"gorm.io/driver/sqlite"
-	"gorm.io/gorm"
 )
 
 type IServiceContainer interface {
@@ -22,9 +19,10 @@ func (k *kernel) InjectPlayerController() controllers.PlayerController {
 
 	sqliteHandler := &infrastructures.SQLiteHandler{}
 
-	// TODO - movie this into sql lite handler?
-	db, _ := gorm.Open(sqlite.Open("/var/tmp/tennis.db"), &gorm.Config{})
-	sqliteHandler.Conn = db
+	err := sqliteHandler.ConnectSQLite("/var/tmp/tennis.db")
+	if err != nil {
+		panic(err)
+	}
 
 	playerService := &services.PlayerService{IPlayerRepository: &repositories.PlayerRepository{IDbHandler: sqliteHandler}}
 	playerController := controllers.PlayerController{IPlayerService: playerService}
@@ -37,6 +35,7 @@ var (
 	containerOnce sync.Once
 )
 
+// singleton
 func ServiceContainer() IServiceContainer {
 	if k == nil {
 		containerOnce.Do(func() {

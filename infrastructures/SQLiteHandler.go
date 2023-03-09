@@ -1,33 +1,23 @@
 package infrastructures
 
 import (
-	"database/sql"
-
+	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
 )
 
 type SQLiteHandler struct {
-	// TODO - package private?
-	Conn *gorm.DB
+	conn *gorm.DB
 }
 
 func (handler *SQLiteHandler) Connection() *gorm.DB {
-	return handler.Conn
+	return handler.conn
 }
 
-type SqliteRow struct {
-	Rows *sql.Rows
-}
-
-func (r SqliteRow) Scan(dest ...interface{}) error {
-	err := r.Rows.Scan(dest...)
+func (handler *SQLiteHandler) ConnectSQLite(dsn string) error {
+	db, err := gorm.Open(sqlite.Open(dsn), &gorm.Config{})
 	if err != nil {
 		return err
 	}
-
+	handler.conn = db
 	return nil
-}
-
-func (r SqliteRow) Next() bool {
-	return r.Rows.Next()
 }

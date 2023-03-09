@@ -3,11 +3,13 @@ service-pattern-go
 
 ## TODOS
 https://staticcheck.io/docs/getting-started/ - implement static check
+logging - check for println/error statements
 create e2e tests
 migrate model
 kubernetes/docker
 GCS
 GCS auth
+negative input tests
 
 Hey! Welcome, this is an example of simple REST API implementation with clean architecture written in Go with complete Dependency Injection along with Mocking example, following SOLID principles.
 

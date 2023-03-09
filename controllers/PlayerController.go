@@ -20,10 +20,7 @@ type ResponseError struct {
 	Message string
 }
 
-// TODO - how should we handle and test negative case?
 func (controller *PlayerController) GetPlayerScore(res http.ResponseWriter, req *http.Request) {
-
-	// TODO - could check for bad input here?
 	player1Name := chi.URLParam(req, "player1")
 	player2Name := chi.URLParam(req, "player2")
 
@@ -35,13 +32,11 @@ func (controller *PlayerController) GetPlayerScore(res http.ResponseWriter, req 
 			return
 		} else {
 			res.WriteHeader(http.StatusInternalServerError)
-			// TODO - implement logging here
 			errMsg := fmt.Errorf("Got an unexpected error: %v", err)
 			fmt.Println(errMsg.Error())
 			json.NewEncoder(res).Encode(ResponseError{Message: "Unexpected error."})
 		}
 	}
 
-	// maybe marshal instead... TODO check that
 	json.NewEncoder(res).Encode(viewmodels.ScoresVM{Score: scores})
 }

@@ -19,8 +19,10 @@ type IServiceContainer interface {
 type kernel struct{}
 
 func (k *kernel) InjectPlayerController() controllers.PlayerController {
+
 	sqliteHandler := &infrastructures.SQLiteHandler{}
 
+	// TODO - movie this into sql lite handler?
 	db, _ := gorm.Open(sqlite.Open("/var/tmp/tennis.db"), &gorm.Config{})
 	sqliteHandler.Conn = db
 

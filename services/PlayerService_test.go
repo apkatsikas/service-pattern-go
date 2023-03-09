@@ -10,82 +10,111 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestGetScore(t *testing.T) {
+const getPlayerByName = "GetPlayerByName"
 
+func TestGetScore(t *testing.T) {
 	playerRepository := new(mocks.IPlayerRepository)
+	player1Name := "Rafael"
+	player2Name := "Serena"
+	expectedScore := "Forty-Fifteen"
 
 	player1 := models.PlayerModel{}
 	player1.Id = 101
-	player1.Name = "Rafael"
+	player1.Name = player1Name
 	player1.Score = 3
 
 	player2 := models.PlayerModel{}
 	player2.Id = 103
-	player2.Name = "Serena"
+	player2.Name = player2Name
 	player2.Score = 1
 
-	playerRepository.On("GetPlayerByName", "Rafael").Return(player1, nil)
-	playerRepository.On("GetPlayerByName", "Serena").Return(player2, nil)
+	playerRepository.On(getPlayerByName, player1Name).Return(player1, nil)
+	playerRepository.On(getPlayerByName, player2Name).Return(player2, nil)
 
 	playerService := PlayerService{playerRepository}
 
-	expectedResult := "Forty-Fifteen"
-
-	actualResult, err := playerService.GetScores("Rafael", "Serena")
+	actualResult, err := playerService.GetScores(player1Name, player2Name)
 
 	// Make sure we got the correct score
-	assert.Equal(t, expectedResult, actualResult)
+	assert.Equal(t, expectedScore, actualResult)
 	assert.Nil(t, err)
 }
 
 func TestGetScoreNoRecordPlayer1(t *testing.T) {
 	playerRepository := new(mocks.IPlayerRepository)
+	player1Name := "fart"
+	player2Name := "Rafael"
+	expectedScore := ""
 
-	player1 := models.PlayerModel{}
+	var player1 models.PlayerModel
 
 	player2 := models.PlayerModel{}
 	player2.Id = 101
-	player2.Name = "Rafael"
+	player2.Name = player2Name
 	player2.Score = 3
 
-	playerRepository.On("GetPlayerByName", "fart").Return(player1, nil)
-	playerRepository.On("GetPlayerByName", "Rafael").Return(player2, ce.RecordNotFoundError)
+	playerRepository.On(getPlayerByName, player1Name).Return(player1, nil)
+	playerRepository.On(getPlayerByName, player2Name).Return(player2, ce.RecordNotFoundError)
 
 	playerService := PlayerService{playerRepository}
 
-	expectedResult := ""
-
-	actualResult, err := playerService.GetScores("fart", "Rafael")
+	actualScore, err := playerService.GetScores(player1Name, player2Name)
 
 	// Check that we got an empty player score
-	assert.Equal(t, expectedResult, actualResult)
+	assert.Equal(t, expectedScore, actualScore)
 
 	// Check that we got an error
-	assert.Equal(t, err, ce.RecordNotFoundError)
+	assert.Equal(t, ce.RecordNotFoundError, err)
 }
 
 func TestGetScoreNoRecordPlayer2(t *testing.T) {
 	playerRepository := new(mocks.IPlayerRepository)
+	player1Name := "Rafael"
+	player2Name := "fart"
+	expectedScore := ""
 
 	player1 := models.PlayerModel{}
 	player1.Id = 101
-	player1.Name = "Rafael"
+	player1.Name = player1Name
 	player1.Score = 3
 
-	player2 := models.PlayerModel{}
+	var player2 models.PlayerModel
 
-	playerRepository.On("GetPlayerByName", "Rafael").Return(player1, nil)
-	playerRepository.On("GetPlayerByName", "fart").Return(player2, ce.RecordNotFoundError)
+	playerRepository.On(getPlayerByName, player1Name).Return(player1, nil)
+	playerRepository.On(getPlayerByName, player2Name).Return(player2, ce.RecordNotFoundError)
 
 	playerService := PlayerService{playerRepository}
 
-	expectedResult := ""
-
-	actualResult, err := playerService.GetScores("Rafael", "fart")
+	actualScore, err := playerService.GetScores(player1Name, player2Name)
 
 	// Check that we got an empty player score
-	assert.Equal(t, expectedResult, actualResult)
+	assert.Equal(t, expectedScore, actualScore)
 
-	// Check that we got an error
-	assert.Equal(t, err, ce.RecordNotFoundError)
+	// Check that we got a RecordNotFoundError error
+	assert.Equal(t, ce.RecordNotFoundError, err)
+}
+
+func TestGetScoreNoRecordBothPlayers(t *testing.T) {
+	player1Name := "farty"
+	player2Name := "fart"
+	expectedScore := ""
+
+	playerRepository := new(mocks.IPlayerRepository)
+
+	// Zero value
+	var player1 models.PlayerModel
+	var player2 models.PlayerModel
+
+	playerRepository.On(getPlayerByName, player1Name).Return(player1, ce.RecordNotFoundError)
+	playerRepository.On(getPlayerByName, player2Name).Return(player2, ce.RecordNotFoundError)
+
+	playerService := PlayerService{playerRepository}
+
+	actualScore, err := playerService.GetScores(player1Name, player2Name)
+
+	// Check that we got an empty player score
+	assert.Equal(t, expectedScore, actualScore)
+
+	// Check that we got a RecordNotFoundError error
+	assert.Equal(t, ce.RecordNotFoundError, err)
 }

@@ -23,6 +23,7 @@ type ResponseError struct {
 // TODO - how should we handle and test negative case?
 func (controller *PlayerController) GetPlayerScore(res http.ResponseWriter, req *http.Request) {
 
+	// TODO - could check for bad input here?
 	player1Name := chi.URLParam(req, "player1")
 	player2Name := chi.URLParam(req, "player2")
 

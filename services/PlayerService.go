@@ -8,9 +8,8 @@ type PlayerService struct {
 	interfaces.IPlayerRepository
 }
 
+// Needs comments
 func (service *PlayerService) GetScores(player1Name string, player2Name string) (string, error) {
-
-	// could i determine status code and inspect error here?
 	baseScore := [4]string{"Love", "Fifteen", "Thirty", "Forty"}
 	var result string
 

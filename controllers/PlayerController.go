@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"encoding/json"
+	"fmt"
 	"net/http"
 
 	ce "github.com/irahardianto/service-pattern-go/customerrors"
@@ -27,13 +28,16 @@ func (controller *PlayerController) GetPlayerScore(res http.ResponseWriter, req 
 
 	scores, err := controller.GetScores(player1Name, player2Name)
 	if err != nil {
-		// TODO - make this nice
 		if err == ce.RecordNotFoundError {
 			res.WriteHeader(http.StatusNotFound)
 			json.NewEncoder(res).Encode(ResponseError{Message: "Record not found."})
 			return
 		} else {
-			panic(err)
+			res.WriteHeader(http.StatusInternalServerError)
+			// TODO - implement logging here
+			errMsg := fmt.Errorf("Got an unexpected error: %v", err)
+			fmt.Println(errMsg.Error())
+			json.NewEncoder(res).Encode(ResponseError{Message: "Unexpected error."})
 		}
 	}
 

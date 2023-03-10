@@ -1,3 +1,5 @@
+setup-db:
+	sqlite3 /var/tmp/tennis.db < setup.sql
 run:
 	go1.20.1 run .
 unit-test:

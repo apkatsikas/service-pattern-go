@@ -11,6 +11,10 @@ GCS
 GCS auth
 negative input tests
 
+## RUnning
+docker build -t test .
+docker run -p 8080:8080 test
+
 Hey! Welcome, this is an example of simple REST API implementation with clean architecture written in Go with complete Dependency Injection along with Mocking example, following SOLID principles.
 
 Inspired by [Manuel Kiessling go-cleanarchitecture](http://manuel.kiessling.net/2012/09/28/applying-the-clean-architecture-to-go-applications/) and [Joshua Partogi TDD training session](https://github.com/jpartogi/tennis-kata-laravel/)

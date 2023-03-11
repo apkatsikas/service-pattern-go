@@ -2,17 +2,19 @@ service-pattern-go
 -------
 
 ## TODOS
+cleanup code
+start new repo with this as boilerplate
+make my model!
+log rotation
+negative input tests
 5 minute timer after insert - sync to GCS bucket
 move from google drive to GCS bucket
 get this working in digital ocean
 try 3 month kubernetes from google
 create e2e tests
-migrate model
-log rotation
 kubernetes/docker
 GCS
 GCS auth
-negative input tests
 
 ## RUnning
 docker build -t test .

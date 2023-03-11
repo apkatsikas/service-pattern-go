@@ -12,14 +12,14 @@ type IPlayerRepository struct {
 }
 
 // GetPlayerByName provides a mock function with given fields: name
-func (_m *IPlayerRepository) GetPlayerByName(name string) (*models.PlayerModel, error) {
+func (_m *IPlayerRepository) GetPlayerByName(name string) (*models.Player, error) {
 	ret := _m.Called(name)
 
-	var r0 models.PlayerModel
-	if rf, ok := ret.Get(0).(func(string) models.PlayerModel); ok {
+	var r0 models.Player
+	if rf, ok := ret.Get(0).(func(string) models.Player); ok {
 		r0 = rf(name)
 	} else {
-		r0 = ret.Get(0).(models.PlayerModel)
+		r0 = ret.Get(0).(models.Player)
 	}
 
 	var r1 error

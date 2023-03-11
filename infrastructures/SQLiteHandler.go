@@ -11,15 +11,15 @@ type SQLiteHandler struct {
 }
 
 func (handler *SQLiteHandler) migrateCreate(name string, score int) *gorm.DB {
-	var player models.PlayerModel
+	var player models.Player
 	return handler.conn.Where(
-		models.PlayerModel{Name: name}).Attrs(
-		models.PlayerModel{Score: score}).FirstOrCreate(&player)
+		models.Player{Name: name}).Attrs(
+		models.Player{Score: score}).FirstOrCreate(&player)
 }
 
 func (handler *SQLiteHandler) migrate() error {
 	// Auto Migrate
-	err := handler.conn.AutoMigrate(&models.PlayerModel{})
+	err := handler.conn.AutoMigrate(&models.Player{})
 	if err != nil {
 		return err
 	}

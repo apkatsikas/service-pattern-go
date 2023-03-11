@@ -18,12 +18,12 @@ func TestGetScore(t *testing.T) {
 	player2Name := "Serena"
 	expectedScore := "Forty-Fifteen"
 
-	player1 := models.PlayerModel{}
+	player1 := models.Player{}
 	player1.Id = 101
 	player1.Name = player1Name
 	player1.Score = 3
 
-	player2 := models.PlayerModel{}
+	player2 := models.Player{}
 	player2.Id = 103
 	player2.Name = player2Name
 	player2.Score = 1
@@ -47,9 +47,9 @@ func TestGetScoreNoRecordPlayer1(t *testing.T) {
 	player2Name := "Rafael"
 	expectedScore := ""
 
-	var player1 models.PlayerModel
+	var player1 models.Player
 
-	player2 := models.PlayerModel{}
+	player2 := models.Player{}
 	player2.Id = 101
 	player2.Name = player2Name
 	player2.Score = 3
@@ -74,12 +74,12 @@ func TestGetScoreNoRecordPlayer2(t *testing.T) {
 	player2Name := "fart"
 	expectedScore := ""
 
-	player1 := models.PlayerModel{}
+	player1 := models.Player{}
 	player1.Id = 101
 	player1.Name = player1Name
 	player1.Score = 3
 
-	var player2 models.PlayerModel
+	var player2 models.Player
 
 	playerRepository.On(getPlayerByName, player1Name).Return(player1, nil)
 	playerRepository.On(getPlayerByName, player2Name).Return(player2, ce.RecordNotFoundError)
@@ -103,8 +103,8 @@ func TestGetScoreNoRecordBothPlayers(t *testing.T) {
 	playerRepository := new(mocks.IPlayerRepository)
 
 	// Zero value
-	var player1 models.PlayerModel
-	var player2 models.PlayerModel
+	var player1 models.Player
+	var player2 models.Player
 
 	playerRepository.On(getPlayerByName, player1Name).Return(player1, ce.RecordNotFoundError)
 	playerRepository.On(getPlayerByName, player2Name).Return(player2, ce.RecordNotFoundError)

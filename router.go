@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"sync"
 
 	"github.com/go-chi/chi"
@@ -18,6 +19,8 @@ func (router *router) InitRouter() *chi.Mux {
 
 	r := chi.NewRouter()
 	r.HandleFunc("/getScore/{player1}/vs/{player2}", playerController.GetPlayerScore)
+
+	fmt.Println("Router initialized.")
 
 	return r
 }

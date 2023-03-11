@@ -32,9 +32,10 @@ func (controller *PlayerController) GetPlayerScore(res http.ResponseWriter, req 
 			return
 		} else {
 			res.WriteHeader(http.StatusInternalServerError)
-			errMsg := fmt.Errorf("Got an unexpected error: %v", err)
+			errMsg := fmt.Errorf("Got an unexpected error on getting scores: %v", err)
 			fmt.Println(errMsg.Error())
 			json.NewEncoder(res).Encode(ResponseError{Message: "Unexpected error."})
+			return
 		}
 	}
 

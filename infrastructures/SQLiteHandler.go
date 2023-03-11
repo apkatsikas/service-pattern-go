@@ -10,64 +10,68 @@ type SQLiteHandler struct {
 	conn *gorm.DB
 }
 
-func (handler *SQLiteHandler) migrateCreate(name string, score int) *gorm.DB {
-	var player models.Player
-	return handler.conn.Where(
-		models.Player{Name: name}).Attrs(
-		models.Player{Score: score}).FirstOrCreate(&player)
+func (handler *SQLiteHandler) migrateCreate(player models.Player) error {
+	var p models.Player
+	result := handler.conn.Where(
+		models.Player{Name: player.Name}).Attrs(
+		models.Player{Score: player.Score}).FirstOrCreate(&p)
+
+	if result.Error != nil {
+		return result.Error
+	}
+	return nil
 }
 
-func (handler *SQLiteHandler) migrate() error {
-	// TODO - only migrate data if flag specified
-	// and make it more data driven
-
-	// Auto Migrate
-	err := handler.conn.AutoMigrate(&models.Player{})
-	if err != nil {
-		return err
+func getMigrationData() []models.Player {
+	players := []models.Player{
+		{
+			Name:  "Rafael",
+			Score: 3,
+		},
+		{
+			Name:  "Roger",
+			Score: 2,
+		},
+		{
+			Name:  "Serena",
+			Score: 1,
+		},
+		{
+			Name:  "Maria",
+			Score: 0,
+		},
 	}
-
-	// Setup data
-	result := handler.migrateCreate("Rafael", 3)
-
-	if result.Error != nil {
-		return result.Error
-	}
-
-	result = handler.migrateCreate("Roger", 2)
-
-	if result.Error != nil {
-		return result.Error
-	}
-
-	result = handler.migrateCreate("Serena", 1)
-
-	if result.Error != nil {
-		return result.Error
-	}
-
-	result = handler.migrateCreate("Maria", 0)
-
-	if result.Error != nil {
-		return result.Error
-	}
-
-	return nil
+	return players
 }
 
 func (handler *SQLiteHandler) Connection() *gorm.DB {
 	return handler.conn
 }
 
+func (handler *SQLiteHandler) Migrate() error {
+	err := handler.conn.AutoMigrate(&models.Player{})
+	if err != nil {
+		return err
+	}
+
+	for _, p := range getMigrationData() {
+		err = handler.migrateCreate(p)
+		if err != nil {
+			return err
+		}
+	}
+
+	return nil
+}
+
 func (handler *SQLiteHandler) ConnectSQLite(dsn string) error {
-	db, err := gorm.Open(sqlite.Open(dsn), &gorm.Config{})
+	db, err := gorm.Open(sqlite.Open(dsn), &gorm.Config{
+		// TODO - turn this on?
+		//Logger: logger.Default.LogMode(logger.Silent)
+	})
 	if err != nil {
 		return err
 	}
 	handler.conn = db
-	err = handler.migrate()
-	if err != nil {
-		return err
-	}
 	return nil
 }

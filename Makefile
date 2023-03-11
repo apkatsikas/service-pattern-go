@@ -1,7 +1,7 @@
-setup-db:
-	sqlite3 /var/tmp/tennis.db < setup.sql
 build_and_run:
 	go1.20.1 build && ./service-pattern-go
+build_and_run_migrate:
+	go1.20.1 build && ./service-pattern-go -migrateDB=true
 build_and_run_background:
 	go1.20.1 build && ./service-pattern-go &
 run:

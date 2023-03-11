@@ -2,12 +2,11 @@ package controllers
 
 import (
 	"encoding/json"
-	"fmt"
-	"log"
 	"net/http"
 
 	ce "github.com/irahardianto/service-pattern-go/customerrors"
 	"github.com/irahardianto/service-pattern-go/interfaces"
+	"github.com/irahardianto/service-pattern-go/logutil"
 
 	"github.com/go-chi/chi"
 	"github.com/irahardianto/service-pattern-go/viewmodels"
@@ -33,8 +32,7 @@ func (controller *PlayerController) GetPlayerScore(res http.ResponseWriter, req 
 			return
 		} else {
 			res.WriteHeader(http.StatusInternalServerError)
-			errMsg := fmt.Errorf("ERROR: Failed to get scores. Error was: %v", err)
-			log.Println(errMsg.Error())
+			logutil.Error("Failed to get scores. Error was: %v", err)
 			json.NewEncoder(res).Encode(ResponseError{Message: "Unexpected error."})
 			return
 		}

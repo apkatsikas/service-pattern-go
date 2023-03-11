@@ -12,8 +12,6 @@ format:
 	go1.20.1 fmt ./...
 vet:
 	go1.20.1 vet
-lint:
-	staticcheck ./...
 tidy:
 	go1.20.1 mod tidy
 list_processes:

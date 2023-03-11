@@ -1,10 +1,10 @@
 package main
 
 import (
-	"log"
 	"sync"
 
 	"github.com/go-chi/chi"
+	"github.com/irahardianto/service-pattern-go/logutil"
 )
 
 type IChiRouter interface {
@@ -20,7 +20,7 @@ func (router *router) InitRouter() *chi.Mux {
 	r := chi.NewRouter()
 	r.HandleFunc("/getScore/{player1}/vs/{player2}", playerController.GetPlayerScore)
 
-	log.Println("Router initialized.")
+	logutil.Info("Router initialized.")
 
 	return r
 }

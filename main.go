@@ -2,10 +2,9 @@ package main
 
 import (
 	"flag"
-	"io"
-	"log"
 	"net/http"
-	"os"
+
+	"github.com/irahardianto/service-pattern-go/logutil"
 )
 
 const logFile = "logs.txt"
@@ -13,21 +12,8 @@ const logFile = "logs.txt"
 var migrateDB = false
 
 func main() {
-	// Delete log
-	err := os.Remove(logFile)
-	if err != nil {
-		log.Fatal(err)
-	}
-	// If the file doesn't exist, create it or append to the file
-	file, err := os.OpenFile(logFile, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0666)
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	mw := io.MultiWriter(os.Stdout, file)
-	log.SetOutput(mw)
-
-	log.Println("Running...")
+	logutil.Setup()
+	logutil.Info("Running...")
 	flag.BoolVar(&migrateDB, "migrateDB", false, "Migrate the database")
 	flag.Parse()
 

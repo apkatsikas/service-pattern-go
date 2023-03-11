@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"log"
 	"sync"
 
 	"github.com/irahardianto/service-pattern-go/controllers"
@@ -24,19 +25,22 @@ func (k *kernel) InjectPlayerController() controllers.PlayerController {
 	// Connect to SQLite
 	err := sqliteHandler.ConnectSQLite(dbPath)
 	if err != nil {
-		panic(err)
+		log.Panicf(
+			"ERROR: Failed to connect to SQLite. Error was %v", err)
 	}
 
 	if migrateDB {
-		fmt.Println("Migrating DB...")
+		log.Println("Migrating DB...")
 		err = sqliteHandler.Migrate()
 		if err != nil {
-			errMsg := fmt.Errorf("Got an error on migration %v", err)
-			fmt.Println(errMsg.Error())
+			errMsg := fmt.Errorf(
+				"ERROR: failed to migrate. Error was %v", err)
+			log.Println(errMsg.Error())
 		}
 	}
 
-	playerService := &services.PlayerService{IPlayerRepository: &repositories.PlayerRepository{IDbHandler: sqliteHandler}}
+	playerService := &services.PlayerService{
+		IPlayerRepository: &repositories.PlayerRepository{IDbHandler: sqliteHandler}}
 	playerController := controllers.PlayerController{IPlayerService: playerService}
 
 	return playerController

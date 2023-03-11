@@ -6,10 +6,9 @@ service-pattern-go
 move from google drive to GCS bucket
 get this working in digital ocean
 try 3 month kubernetes from google
-https://staticcheck.io/docs/getting-started/ - implement static check
-logging - check for println/error statements
 create e2e tests
 migrate model
+log rotation
 kubernetes/docker
 GCS
 GCS auth

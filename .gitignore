@@ -17,3 +17,4 @@
 
 service-pattern-go
 vendor/
+logs.txt

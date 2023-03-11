@@ -3,6 +3,7 @@ package controllers
 import (
 	"encoding/json"
 	"fmt"
+	"log"
 	"net/http"
 
 	ce "github.com/irahardianto/service-pattern-go/customerrors"
@@ -32,8 +33,8 @@ func (controller *PlayerController) GetPlayerScore(res http.ResponseWriter, req 
 			return
 		} else {
 			res.WriteHeader(http.StatusInternalServerError)
-			errMsg := fmt.Errorf("Got an unexpected error on getting scores: %v", err)
-			fmt.Println(errMsg.Error())
+			errMsg := fmt.Errorf("ERROR: Failed to get scores. Error was: %v", err)
+			log.Println(errMsg.Error())
 			json.NewEncoder(res).Encode(ResponseError{Message: "Unexpected error."})
 			return
 		}

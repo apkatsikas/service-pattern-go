@@ -19,9 +19,9 @@ type IServiceContainer interface {
 type kernel struct{}
 
 func (k *kernel) InjectPlayerController() controllers.PlayerController {
-
 	sqliteHandler := &infrastructures.SQLiteHandler{}
 
+	// Connect to SQLite
 	err := sqliteHandler.ConnectSQLite(dbPath)
 	if err != nil {
 		panic(err)

@@ -18,6 +18,9 @@ func (handler *SQLiteHandler) migrateCreate(name string, score int) *gorm.DB {
 }
 
 func (handler *SQLiteHandler) migrate() error {
+	// TODO - only migrate data if flag specified
+	// and make it more data driven
+
 	// Auto Migrate
 	err := handler.conn.AutoMigrate(&models.Player{})
 	if err != nil {

@@ -9,6 +9,8 @@ import (
 	"github.com/irahardianto/service-pattern-go/services"
 )
 
+const dbPath = "/var/tmp/tennis.db"
+
 type IServiceContainer interface {
 	InjectPlayerController() controllers.PlayerController
 }
@@ -19,7 +21,7 @@ func (k *kernel) InjectPlayerController() controllers.PlayerController {
 
 	sqliteHandler := &infrastructures.SQLiteHandler{}
 
-	err := sqliteHandler.ConnectSQLite("/var/tmp/tennis.db")
+	err := sqliteHandler.ConnectSQLite(dbPath)
 	if err != nil {
 		panic(err)
 	}

@@ -14,3 +14,7 @@ vet:
 	go1.20.1 vet
 tidy:
 	go1.20.1 mod tidy
+list_processes:
+	ps
+kill_process:
+	kill 12345678

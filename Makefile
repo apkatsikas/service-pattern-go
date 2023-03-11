@@ -1,6 +1,9 @@
 setup-db:
 	sqlite3 /var/tmp/tennis.db < setup.sql
-# TODO - build the binary and run that instead
+build_and_run:
+	go1.20.1 build && ./service-pattern-go
+build_and_run_background:
+	go1.20.1 build && ./service-pattern-go &
 run:
 	go1.20.1 run .
 unit-test:

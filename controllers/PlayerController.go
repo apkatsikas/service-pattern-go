@@ -26,7 +26,7 @@ func (controller *PlayerController) GetPlayerScore(res http.ResponseWriter, req 
 
 	scores, err := controller.GetScores(player1Name, player2Name)
 	if err != nil {
-		if err == ce.RecordNotFoundError {
+		if err == ce.ErrRecordNotFound {
 			res.WriteHeader(http.StatusNotFound)
 			json.NewEncoder(res).Encode(ResponseError{Message: "Record not found."})
 			return

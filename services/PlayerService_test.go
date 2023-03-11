@@ -55,7 +55,7 @@ func TestGetScoreNoRecordPlayer1(t *testing.T) {
 	player2.Score = 3
 
 	playerRepository.On(getPlayerByName, player1Name).Return(player1, nil)
-	playerRepository.On(getPlayerByName, player2Name).Return(player2, ce.RecordNotFoundError)
+	playerRepository.On(getPlayerByName, player2Name).Return(player2, ce.ErrRecordNotFound)
 
 	playerService := PlayerService{playerRepository}
 
@@ -65,7 +65,7 @@ func TestGetScoreNoRecordPlayer1(t *testing.T) {
 	assert.Equal(t, expectedScore, actualScore)
 
 	// Check that we got an error
-	assert.Equal(t, ce.RecordNotFoundError, err)
+	assert.Equal(t, ce.ErrRecordNotFound, err)
 }
 
 func TestGetScoreNoRecordPlayer2(t *testing.T) {
@@ -82,7 +82,7 @@ func TestGetScoreNoRecordPlayer2(t *testing.T) {
 	var player2 models.Player
 
 	playerRepository.On(getPlayerByName, player1Name).Return(player1, nil)
-	playerRepository.On(getPlayerByName, player2Name).Return(player2, ce.RecordNotFoundError)
+	playerRepository.On(getPlayerByName, player2Name).Return(player2, ce.ErrRecordNotFound)
 
 	playerService := PlayerService{playerRepository}
 
@@ -92,7 +92,7 @@ func TestGetScoreNoRecordPlayer2(t *testing.T) {
 	assert.Equal(t, expectedScore, actualScore)
 
 	// Check that we got a RecordNotFoundError error
-	assert.Equal(t, ce.RecordNotFoundError, err)
+	assert.Equal(t, ce.ErrRecordNotFound, err)
 }
 
 func TestGetScoreNoRecordBothPlayers(t *testing.T) {
@@ -106,8 +106,8 @@ func TestGetScoreNoRecordBothPlayers(t *testing.T) {
 	var player1 models.Player
 	var player2 models.Player
 
-	playerRepository.On(getPlayerByName, player1Name).Return(player1, ce.RecordNotFoundError)
-	playerRepository.On(getPlayerByName, player2Name).Return(player2, ce.RecordNotFoundError)
+	playerRepository.On(getPlayerByName, player1Name).Return(player1, ce.ErrRecordNotFound)
+	playerRepository.On(getPlayerByName, player2Name).Return(player2, ce.ErrRecordNotFound)
 
 	playerService := PlayerService{playerRepository}
 
@@ -117,5 +117,5 @@ func TestGetScoreNoRecordBothPlayers(t *testing.T) {
 	assert.Equal(t, expectedScore, actualScore)
 
 	// Check that we got a RecordNotFoundError error
-	assert.Equal(t, ce.RecordNotFoundError, err)
+	assert.Equal(t, ce.ErrRecordNotFound, err)
 }

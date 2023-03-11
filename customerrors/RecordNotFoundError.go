@@ -2,4 +2,4 @@ package customerrors
 
 import "errors"
 
-var RecordNotFoundError = errors.New("Could not find record")
+var ErrRecordNotFound = errors.New("could not find record")

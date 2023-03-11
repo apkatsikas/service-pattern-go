@@ -71,7 +71,7 @@ func TestPlayerScoreNoRecordPlayer1(t *testing.T) {
 	expectedResult.Message = recordNotFound
 
 	// setup expectations
-	playerService.On(getScores, player1Name, player2Name).Return("", ce.RecordNotFoundError)
+	playerService.On(getScores, player1Name, player2Name).Return("", ce.ErrRecordNotFound)
 
 	playerController := PlayerController{playerService}
 
@@ -103,7 +103,7 @@ func TestPlayerScoreNoRecordPlayer2(t *testing.T) {
 	expectedResult.Message = recordNotFound
 
 	// setup expectations
-	playerService.On(getScores, player1Name, player2Name).Return("", ce.RecordNotFoundError)
+	playerService.On(getScores, player1Name, player2Name).Return("", ce.ErrRecordNotFound)
 
 	playerController := PlayerController{playerService}
 
@@ -135,7 +135,7 @@ func TestPlayerScoreNoRecordBothPlayers(t *testing.T) {
 	expectedResult.Message = recordNotFound
 
 	// setup expectations
-	playerService.On(getScores, player1Name, player2Name).Return("", ce.RecordNotFoundError)
+	playerService.On(getScores, player1Name, player2Name).Return("", ce.ErrRecordNotFound)
 
 	playerController := PlayerController{playerService}
 

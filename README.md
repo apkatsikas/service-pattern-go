@@ -2,6 +2,7 @@ service-pattern-go
 -------
 
 ## TODOS
+5 minute timer after insert - sync to GCS bucket
 move from google drive to GCS bucket
 get this working in digital ocean
 try 3 month kubernetes from google

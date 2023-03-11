@@ -6,6 +6,7 @@ cleanup code
 start new repo with this as boilerplate
 make my model!
 log rotation
+figure out staticcheck or equivalent
 negative input tests
 5 minute timer after insert - sync to GCS bucket
 move from google drive to GCS bucket

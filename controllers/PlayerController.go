@@ -7,9 +7,9 @@ import (
 	ce "github.com/irahardianto/service-pattern-go/customerrors"
 	"github.com/irahardianto/service-pattern-go/interfaces"
 	"github.com/irahardianto/service-pattern-go/logutil"
+	"github.com/irahardianto/service-pattern-go/viewmodels"
 
 	"github.com/go-chi/chi"
-	"github.com/irahardianto/service-pattern-go/viewmodels"
 )
 
 type PlayerController struct {
@@ -20,16 +20,22 @@ type ResponseError struct {
 	Message string
 }
 
-func (controller *PlayerController) GetPlayerScore(res http.ResponseWriter, req *http.Request) {
-	player1Name := chi.URLParam(req, "player1")
-	player2Name := chi.URLParam(req, "player2")
+const player1Param = "player1"
+const player2Param = "player2"
 
+func (controller *PlayerController) GetPlayerScore(res http.ResponseWriter, req *http.Request) {
+	player1Name := chi.URLParam(req, player1Param)
+	player2Name := chi.URLParam(req, player2Param)
+
+	// Get the scores from the service
 	scores, err := controller.GetScores(player1Name, player2Name)
 	if err != nil {
+		// Record not found
 		if err == ce.ErrRecordNotFound {
 			res.WriteHeader(http.StatusNotFound)
 			json.NewEncoder(res).Encode(ResponseError{Message: "Record not found."})
 			return
+			// Everything else
 		} else {
 			res.WriteHeader(http.StatusInternalServerError)
 			logutil.Error("Failed to get scores. Error was: %v", err)

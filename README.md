@@ -10,6 +10,9 @@ figure out staticcheck or equivalent
 negative input tests
 5 minute timer after insert - sync to GCS bucket
 move from google drive to GCS bucket
+backup logic - every night prob better than after every insert wait 5 mins...
+suppress sqlite warnings
+https://www.sqlite.org/c3ref/backup_finish.html#sqlite3backupinit - online backup API
 get this working in digital ocean
 try 3 month kubernetes from google
 create e2e tests

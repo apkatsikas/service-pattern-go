@@ -20,12 +20,9 @@ type ResponseError struct {
 	Message string
 }
 
-const player1Param = "player1"
-const player2Param = "player2"
-
 func (controller *PlayerController) GetPlayerScore(res http.ResponseWriter, req *http.Request) {
-	player1Name := chi.URLParam(req, player1Param)
-	player2Name := chi.URLParam(req, player2Param)
+	player1Name := chi.URLParam(req, "player1")
+	player2Name := chi.URLParam(req, "player2")
 
 	// Get the scores from the service
 	scores, err := controller.GetScores(player1Name, player2Name)

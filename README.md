@@ -19,6 +19,8 @@ create e2e tests
 kubernetes/docker
 GCS
 GCS auth
+VACUUM main into '/mnt/c/Users/apkat/Desktop/vacuum.sqlite';
+ATTACH "/mnt/c/Users/apkat/Desktop/vacuum.sqlite" as main2;
 
 ## RUnning
 docker build -t test .

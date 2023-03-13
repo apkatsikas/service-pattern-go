@@ -3,6 +3,7 @@ service-pattern-go
 
 ## TODOS
 cleanup code
+through composition, entity should have create/update dates
 start new repo with this as boilerplate
 make my model!
 log rotation

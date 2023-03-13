@@ -5,7 +5,7 @@ import (
 
 	"github.com/irahardianto/service-pattern-go/controllers"
 	"github.com/irahardianto/service-pattern-go/infrastructures"
-	"github.com/irahardianto/service-pattern-go/logutil"
+	"github.com/irahardianto/service-pattern-go/infrastructures/logutil"
 	"github.com/irahardianto/service-pattern-go/repositories"
 	"github.com/irahardianto/service-pattern-go/services"
 )

@@ -1,5 +1,12 @@
 service-pattern-go
 -------
+## go tooling
+i dont have GOROOT set
+i deleted /usr/bin/go - go 1.15
+to trace stuff between double quotes "PS4='+$BASH_SOURCE> ' BASH_XTRACEFD=7 bash -xl 7>&2"
+check  /etc/bash.bashrc
+made a symlink like "ln -s /root/Go/bin/go1.20.1 /usr/bin/go"
+be careful of /root/go vs /root/Go/
 
 ## TODOS
 cleanup code

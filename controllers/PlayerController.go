@@ -5,8 +5,8 @@ import (
 	"net/http"
 
 	ce "github.com/irahardianto/service-pattern-go/customerrors"
+	"github.com/irahardianto/service-pattern-go/infrastructures/logutil"
 	"github.com/irahardianto/service-pattern-go/interfaces"
-	"github.com/irahardianto/service-pattern-go/logutil"
 	"github.com/irahardianto/service-pattern-go/viewmodels"
 
 	"github.com/go-chi/chi"

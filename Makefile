@@ -1,19 +1,19 @@
 build_and_run:
-	go1.20.1 build && ./service-pattern-go
+	go build && ./service-pattern-go
 build_and_run_migrate:
-	go1.20.1 build && ./service-pattern-go -migrateDB=true
+	go build && ./service-pattern-go -migrateDB=true
 build_and_run_background:
-	go1.20.1 build && ./service-pattern-go &
+	go build && ./service-pattern-go &
 run:
-	go1.20.1 run .
+	go run .
 unit-test:
-	go1.20.1 test ./...
+	go test ./...
 format:
-	go1.20.1 fmt ./...
+	go fmt ./...
 vet:
-	go1.20.1 vet
+	go vet
 tidy:
-	go1.20.1 mod tidy
+	go mod tidy
 list_processes:
 	ps
 kill_process:

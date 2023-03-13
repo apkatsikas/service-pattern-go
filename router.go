@@ -4,7 +4,7 @@ import (
 	"sync"
 
 	"github.com/go-chi/chi"
-	"github.com/irahardianto/service-pattern-go/logutil"
+	"github.com/irahardianto/service-pattern-go/infrastructures/logutil"
 )
 
 type IChiRouter interface {

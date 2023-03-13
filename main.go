@@ -4,7 +4,7 @@ import (
 	"flag"
 	"net/http"
 
-	"github.com/irahardianto/service-pattern-go/logutil"
+	"github.com/irahardianto/service-pattern-go/infrastructures/logutil"
 )
 
 const logFile = "logs.txt"

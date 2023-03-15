@@ -65,7 +65,7 @@ func TestPlayerScoreNoRecord(t *testing.T) {
 	playerService := new(mocks.IPlayerService)
 
 	// names
-	player1Name := "fart"
+	player1Name := "fake"
 	player2Name := "Rafael"
 
 	// should get an error
@@ -98,8 +98,8 @@ func TestPlayerScoreUnknownError(t *testing.T) {
 	playerService := new(mocks.IPlayerService)
 
 	// names
-	player1Name := "noway"
-	player2Name := "fart"
+	player1Name := "Rafael"
+	player2Name := "fake"
 
 	// should get an error
 	expectedResult := ResponseError{}

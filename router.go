@@ -14,9 +14,10 @@ type IChiRouter interface {
 type router struct{}
 
 func (router *router) InitRouter() *chi.Mux {
-
+	// Setup controller
 	playerController := ServiceContainer().InjectPlayerController()
 
+	// Create router
 	r := chi.NewRouter()
 	r.HandleFunc("/getScore/{player1}/vs/{player2}", playerController.GetPlayerScore)
 
@@ -25,6 +26,7 @@ func (router *router) InitRouter() *chi.Mux {
 	return r
 }
 
+// Setup singleton
 var (
 	m          *router
 	routerOnce sync.Once

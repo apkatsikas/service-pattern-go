@@ -19,6 +19,7 @@ type IServiceContainer interface {
 type kernel struct{}
 
 func (k *kernel) InjectPlayerController() controllers.PlayerController {
+	// Setup sqlite
 	sqliteHandler := &infrastructures.SQLiteHandler{}
 
 	// Connect to SQLite
@@ -27,6 +28,7 @@ func (k *kernel) InjectPlayerController() controllers.PlayerController {
 		logutil.Fatal("Failed to connect to SQLite. Error was %v", err)
 	}
 
+	// Migrate DB if flag set
 	if flagutil.MigrateDB {
 		logutil.Info("Migrating DB...")
 		err = sqliteHandler.Migrate()
@@ -35,19 +37,21 @@ func (k *kernel) InjectPlayerController() controllers.PlayerController {
 		}
 	}
 
+	// Inject Player service with repository
 	playerService := &services.PlayerService{
 		IPlayerRepository: &repositories.PlayerRepository{IDbHandler: sqliteHandler}}
+	// Inject controller with Player service
 	playerController := controllers.PlayerController{IPlayerService: playerService}
 
 	return playerController
 }
 
+// Setup singleton
 var (
 	k             *kernel
 	containerOnce sync.Once
 )
 
-// singleton
 func ServiceContainer() IServiceContainer {
 	if k == nil {
 		containerOnce.Do(func() {

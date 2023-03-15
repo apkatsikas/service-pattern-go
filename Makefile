@@ -4,6 +4,8 @@ build_and_run_migrate:
 	go build && ./service-pattern-go -migrateDB=true
 build_and_run_background:
 	go build && ./service-pattern-go &
+build_and_run_docker:
+	docker run -p 8080:8080 --rm -it $$(docker build -q .)
 run:
 	go run .
 unit-test:

@@ -27,9 +27,6 @@ func testRequest(player1 string, player2 string) *http.Request {
 }
 
 func TestPlayerScore(t *testing.T) {
-	// mock the service
-	playerService := new(mocks.IPlayerService)
-
 	// names
 	player1Name := "Rafael"
 	player2Name := "Serena"
@@ -39,7 +36,8 @@ func TestPlayerScore(t *testing.T) {
 	expectedResult := viewmodels.ScoresVM{}
 	expectedResult.Score = expectedScore
 
-	// setup service return expectations
+	// setup mock service
+	playerService := new(mocks.IPlayerService)
 	playerService.On(getScores, player1Name, player2Name).Return(expectedScore, nil)
 	playerController := PlayerController{playerService}
 
@@ -61,18 +59,17 @@ func TestPlayerScore(t *testing.T) {
 }
 
 func TestPlayerScoreNoRecord(t *testing.T) {
-	// mock the service
-	playerService := new(mocks.IPlayerService)
-
 	// names
 	player1Name := "fake"
 	player2Name := "Rafael"
 
-	// should get an error
+	// should get a recordNotFound error
 	expectedResult := ResponseError{}
 	expectedResult.Message = recordNotFound
+	expectedStatus := http.StatusNotFound
 
-	// setup service return expectations
+	// setup mock service
+	playerService := new(mocks.IPlayerService)
 	playerService.On(getScores, player1Name, player2Name).Return("", ce.ErrRecordNotFound)
 	playerController := PlayerController{playerService}
 
@@ -90,22 +87,21 @@ func TestPlayerScoreNoRecord(t *testing.T) {
 	// check the value
 	assert.Equal(t, expectedResult, actualResult)
 	// check the status code
-	assert.Equal(t, http.StatusNotFound, w.Result().StatusCode)
+	assert.Equal(t, expectedStatus, w.Result().StatusCode)
 }
 
 func TestPlayerScoreUnknownError(t *testing.T) {
-	// mock the service
-	playerService := new(mocks.IPlayerService)
-
 	// names
 	player1Name := "Rafael"
 	player2Name := "fake"
 
-	// should get an error
+	// should get an unexpected error
 	expectedResult := ResponseError{}
 	expectedResult.Message = "Unexpected error."
+	expectedStatus := http.StatusInternalServerError
 
-	// setup service return expectations
+	// setup mock service
+	playerService := new(mocks.IPlayerService)
 	playerService.On(getScores, player1Name, player2Name).Return("", errors.New("Weird error"))
 	playerController := PlayerController{playerService}
 
@@ -123,5 +119,5 @@ func TestPlayerScoreUnknownError(t *testing.T) {
 	// check the value
 	assert.Equal(t, expectedResult, actualResult)
 	// check the status code
-	assert.Equal(t, http.StatusInternalServerError, w.Result().StatusCode)
+	assert.Equal(t, expectedStatus, w.Result().StatusCode)
 }

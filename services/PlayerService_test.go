@@ -28,8 +28,8 @@ func TestGetScore(t *testing.T) {
 	player2.Name = player2Name
 	player2.Score = 1
 
-	playerRepository.On(getPlayerByName, player1Name).Return(player1, nil)
-	playerRepository.On(getPlayerByName, player2Name).Return(player2, nil)
+	playerRepository.On(getPlayerByName, player1Name).Return(&player1, nil)
+	playerRepository.On(getPlayerByName, player2Name).Return(&player2, nil)
 
 	playerService := PlayerService{playerRepository}
 
@@ -54,8 +54,8 @@ func TestGetScoreNoRecordPlayer1(t *testing.T) {
 	player2.Name = player2Name
 	player2.Score = 3
 
-	playerRepository.On(getPlayerByName, player1Name).Return(player1, nil)
-	playerRepository.On(getPlayerByName, player2Name).Return(player2, ce.ErrRecordNotFound)
+	playerRepository.On(getPlayerByName, player1Name).Return(&player1, nil)
+	playerRepository.On(getPlayerByName, player2Name).Return(&player2, ce.ErrRecordNotFound)
 
 	playerService := PlayerService{playerRepository}
 
@@ -81,8 +81,8 @@ func TestGetScoreNoRecordPlayer2(t *testing.T) {
 
 	var player2 models.Player
 
-	playerRepository.On(getPlayerByName, player1Name).Return(player1, nil)
-	playerRepository.On(getPlayerByName, player2Name).Return(player2, ce.ErrRecordNotFound)
+	playerRepository.On(getPlayerByName, player1Name).Return(&player1, nil)
+	playerRepository.On(getPlayerByName, player2Name).Return(&player2, ce.ErrRecordNotFound)
 
 	playerService := PlayerService{playerRepository}
 
@@ -106,8 +106,8 @@ func TestGetScoreNoRecordBothPlayers(t *testing.T) {
 	var player1 models.Player
 	var player2 models.Player
 
-	playerRepository.On(getPlayerByName, player1Name).Return(player1, ce.ErrRecordNotFound)
-	playerRepository.On(getPlayerByName, player2Name).Return(player2, ce.ErrRecordNotFound)
+	playerRepository.On(getPlayerByName, player1Name).Return(&player1, ce.ErrRecordNotFound)
+	playerRepository.On(getPlayerByName, player2Name).Return(&player2, ce.ErrRecordNotFound)
 
 	playerService := PlayerService{playerRepository}
 

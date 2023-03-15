@@ -1,5 +1,12 @@
 service-pattern-go
 -------
+## mocking
+mockery v 2.22.1 https://github.com/vektra/mockery/releases/download/v2.22.1/mockery_2.22.1_Linux_arm64.tar.gz
+make exexcutable
+cd interfaces
+/usr/local/bin/mockery or mockery --name=IPlayerService
+you need to do this after updating services!
+
 ## go tooling
 i dont have GOROOT set
 i deleted /usr/bin/go - go 1.15

@@ -31,7 +31,7 @@ func TestPlayerScore(t *testing.T) {
 	player1Name := "Rafael"
 	player2Name := "Serena"
 
-	// should get this score
+	// expectations
 	expectedScore := "Forty-Fifteen"
 	expectedResult := viewmodels.ScoresVM{}
 	expectedResult.Score = expectedScore
@@ -64,7 +64,7 @@ func TestPlayerScoreNoRecord(t *testing.T) {
 	player1Name := "fake"
 	player2Name := "Rafael"
 
-	// should get a recordNotFound error
+	// expectations
 	expectedResult := ResponseError{}
 	expectedResult.Message = recordNotFound
 	expectedStatus := http.StatusNotFound
@@ -96,7 +96,7 @@ func TestPlayerScoreUnknownError(t *testing.T) {
 	player1Name := "Rafael"
 	player2Name := "fake"
 
-	// should get an unexpected error
+	// expectations
 	expectedResult := ResponseError{}
 	expectedResult.Message = "Unexpected error."
 	expectedStatus := http.StatusInternalServerError

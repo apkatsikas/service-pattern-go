@@ -7,8 +7,6 @@ import (
 	"github.com/irahardianto/service-pattern-go/infrastructures/logutil"
 )
 
-const logFile = "logs.txt"
-
 var migrateDB = false
 
 func main() {

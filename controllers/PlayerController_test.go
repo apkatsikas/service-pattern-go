@@ -35,6 +35,7 @@ func TestPlayerScore(t *testing.T) {
 	expectedScore := "Forty-Fifteen"
 	expectedResult := viewmodels.ScoresVM{}
 	expectedResult.Score = expectedScore
+	expectedStatus := http.StatusOK
 
 	// setup mock service
 	playerService := new(mocks.IPlayerService)
@@ -55,7 +56,7 @@ func TestPlayerScore(t *testing.T) {
 	// check the value
 	assert.Equal(t, expectedResult, actualResult)
 	// check the status code
-	assert.Equal(t, http.StatusOK, w.Result().StatusCode)
+	assert.Equal(t, expectedStatus, w.Result().StatusCode)
 }
 
 func TestPlayerScoreNoRecord(t *testing.T) {

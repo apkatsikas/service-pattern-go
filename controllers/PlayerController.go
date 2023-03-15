@@ -40,6 +40,6 @@ func (controller *PlayerController) GetPlayerScore(res http.ResponseWriter, req 
 			return
 		}
 	}
-
+	// Encode the score to the response
 	json.NewEncoder(res).Encode(viewmodels.ScoresVM{Score: scores})
 }

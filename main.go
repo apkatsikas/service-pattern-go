@@ -1,19 +1,22 @@
 package main
 
 import (
-	"flag"
 	"net/http"
 
+	fu "github.com/irahardianto/service-pattern-go/infrastructures/flagutil"
 	"github.com/irahardianto/service-pattern-go/infrastructures/logutil"
 )
 
-var migrateDB = false
+var flagutil fu.FlagUtil
 
 func main() {
+	// Setup logs
 	logutil.Setup()
 	logutil.Info("Running...")
-	flag.BoolVar(&migrateDB, "migrateDB", false, "Migrate the database")
-	flag.Parse()
+
+	// Setup flags
+	flagutil = fu.FlagUtil{}
+	flagutil.Setup()
 
 	http.ListenAndServe(":8080", ChiRouter().InitRouter())
 }

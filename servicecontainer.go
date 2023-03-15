@@ -27,7 +27,7 @@ func (k *kernel) InjectPlayerController() controllers.PlayerController {
 		logutil.Fatal("Failed to connect to SQLite. Error was %v", err)
 	}
 
-	if migrateDB {
+	if flagutil.MigrateDB {
 		logutil.Info("Migrating DB...")
 		err = sqliteHandler.Migrate()
 		if err != nil {

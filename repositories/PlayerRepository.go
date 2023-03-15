@@ -1,7 +1,7 @@
 package repositories
 
 import (
-	"github.com/irahardianto/service-pattern-go/customerrors"
+	ce "github.com/irahardianto/service-pattern-go/customerrors"
 	"github.com/irahardianto/service-pattern-go/interfaces"
 	"github.com/irahardianto/service-pattern-go/models"
 
@@ -20,7 +20,7 @@ func (repository *PlayerRepository) GetPlayerByName(name string) (*models.Player
 
 	if result.Error != nil {
 		if result.Error.Error() == "record not found" {
-			return &player, customerrors.ErrRecordNotFound
+			return &player, ce.ErrRecordNotFound
 		}
 		return nil, result.Error
 	}

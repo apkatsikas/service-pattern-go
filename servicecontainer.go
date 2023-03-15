@@ -29,7 +29,7 @@ func (k *kernel) InjectPlayerController() controllers.PlayerController {
 	}
 
 	// Migrate DB if flag set
-	if flagutil.MigrateDB {
+	if FlagUtil().Get().MigrateDB {
 		logutil.Info("Migrating DB...")
 		err = sqliteHandler.Migrate()
 		if err != nil {

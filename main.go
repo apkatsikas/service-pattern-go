@@ -2,13 +2,31 @@ package main
 
 import (
 	"net/http"
+	"sync"
 
-	fu "github.com/irahardianto/service-pattern-go/infrastructures/flagutil"
+	"github.com/irahardianto/service-pattern-go/infrastructures/flagutil"
 	"github.com/irahardianto/service-pattern-go/infrastructures/logutil"
 )
 
-// TODO - singleton pattern?
-var flagutil fu.FlagUtil
+// Setup FlagUtil interface and singleton
+type IFlagUtil interface {
+	Setup()
+	Get() *flagutil.FlagUtil
+}
+
+var (
+	fu     *flagutil.FlagUtil
+	fuOnce sync.Once
+)
+
+func FlagUtil() IFlagUtil {
+	if fu == nil {
+		fuOnce.Do(func() {
+			fu = &flagutil.FlagUtil{}
+		})
+	}
+	return fu
+}
 
 func main() {
 	// Setup logs
@@ -16,8 +34,7 @@ func main() {
 	logutil.Info("Running...")
 
 	// Setup flags
-	flagutil = fu.FlagUtil{}
-	flagutil.Setup()
+	FlagUtil().Setup()
 
 	http.ListenAndServe(":8080", ChiRouter().InitRouter())
 }

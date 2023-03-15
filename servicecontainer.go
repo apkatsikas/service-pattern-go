@@ -5,6 +5,7 @@ import (
 
 	"github.com/irahardianto/service-pattern-go/controllers"
 	"github.com/irahardianto/service-pattern-go/infrastructures"
+	"github.com/irahardianto/service-pattern-go/infrastructures/flagutil"
 	"github.com/irahardianto/service-pattern-go/infrastructures/logutil"
 	"github.com/irahardianto/service-pattern-go/repositories"
 	"github.com/irahardianto/service-pattern-go/services"
@@ -29,7 +30,7 @@ func (k *kernel) InjectPlayerController() controllers.PlayerController {
 	}
 
 	// Migrate DB if flag set
-	if FlagUtil().Get().MigrateDB {
+	if flagutil.Get().MigrateDB {
 		logutil.Info("Migrating DB...")
 		err = sqliteHandler.Migrate()
 		if err != nil {

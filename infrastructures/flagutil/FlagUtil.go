@@ -2,6 +2,7 @@ package flagutil
 
 import (
 	"flag"
+	"sync"
 )
 
 type FlagUtil struct {
@@ -13,6 +14,16 @@ func (fu *FlagUtil) Setup() {
 	flag.Parse()
 }
 
-func (fu *FlagUtil) Get() *FlagUtil {
+var (
+	fu     *FlagUtil
+	fuOnce sync.Once
+)
+
+func Get() *FlagUtil {
+	if fu == nil {
+		fuOnce.Do(func() {
+			fu = &FlagUtil{}
+		})
+	}
 	return fu
 }

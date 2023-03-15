@@ -18,3 +18,5 @@ list_processes:
 	ps
 kill_process:
 	kill 12345678
+find_go_symlink:
+	readlink -f /usr/bin/go

@@ -7,6 +7,7 @@ import (
 	"github.com/irahardianto/service-pattern-go/infrastructures/logutil"
 )
 
+// TODO - singleton pattern?
 var flagutil fu.FlagUtil
 
 func main() {

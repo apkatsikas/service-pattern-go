@@ -12,14 +12,12 @@ type SQLiteHandler struct {
 
 func (handler *SQLiteHandler) migrateCreate(player models.Player) error {
 	var p models.Player
+	// If record can't be found, insert it
 	result := handler.conn.Where(
 		models.Player{Name: player.Name}).Attrs(
 		models.Player{Score: player.Score}).FirstOrCreate(&p)
 
-	if result.Error != nil {
-		return result.Error
-	}
-	return nil
+	return result.Error
 }
 
 func getMigrationData() []models.Player {
@@ -49,11 +47,13 @@ func (handler *SQLiteHandler) Connection() *gorm.DB {
 }
 
 func (handler *SQLiteHandler) Migrate() error {
+	// Create table if needed
 	err := handler.conn.AutoMigrate(&models.Player{})
 	if err != nil {
 		return err
 	}
 
+	// Loop through and insert migration data
 	for _, p := range getMigrationData() {
 		err = handler.migrateCreate(p)
 		if err != nil {

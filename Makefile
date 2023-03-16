@@ -5,9 +5,7 @@ build_and_run_migrate:
 build_and_run_background:
 	go build && ./service-pattern-go &
 build_and_run_docker:
-	docker run -p 8080:8080 --rm -it $$(docker build -q .)
-run:
-	go run .
+	docker run -p 8080:8080 --volume $$PWD:/app --rm -it $$(docker build -q .)
 unit-test:
 	go test ./...
 format:

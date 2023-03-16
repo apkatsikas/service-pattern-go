@@ -12,8 +12,8 @@ type PlayerRepository struct {
 	interfaces.IDbHandler
 }
 
-func (repository *PlayerRepository) GetPlayerByName(name string) (*models.Player, error) {
-	gormConn := repository.Connection()
+func (pr *PlayerRepository) GetPlayerByName(name string) (*models.Player, error) {
+	gormConn := pr.Connection()
 
 	var player models.Player
 	result := gormConn.First(&player, "name = ?", name)

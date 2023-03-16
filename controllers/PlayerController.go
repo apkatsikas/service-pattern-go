@@ -20,12 +20,12 @@ type ResponseError struct {
 	Message string
 }
 
-func (controller *PlayerController) GetPlayerScore(res http.ResponseWriter, req *http.Request) {
+func (pc *PlayerController) GetPlayerScore(res http.ResponseWriter, req *http.Request) {
 	player1Name := chi.URLParam(req, "player1")
 	player2Name := chi.URLParam(req, "player2")
 
 	// Get the scores from the service
-	scores, err := controller.GetScores(player1Name, player2Name)
+	scores, err := pc.GetScores(player1Name, player2Name)
 	if err != nil {
 		// Record not found
 		if err == ce.ErrRecordNotFound {

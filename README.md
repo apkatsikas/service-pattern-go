@@ -16,7 +16,9 @@ made a symlink like "ln -s /root/Go/bin/go1.20.1 /usr/bin/go"
 be careful of /root/go vs /root/Go/
 
 ## TODOS
-cleanup code
+update all deps once repo is ready
+start with app serving CSV and /random endpoint
+cleanup README
 through composition, entity should have create/update dates
 start new repo with this as boilerplate
 make my model!

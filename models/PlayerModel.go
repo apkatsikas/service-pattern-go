@@ -1,7 +1,7 @@
 package models
 
-type PlayerModel struct {
-	Id    int
-	Name  string
-	Score int
+type Player struct {
+	Id    uint   `gorm:"primarykey;AUTO_INCREMENT;not null"`
+	Name  string `gorm:"type:varchar(75);unique_index;not null"`
+	Score int    `gorm:"not null"`
 }

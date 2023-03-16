@@ -1,46 +1,77 @@
 package infrastructures
 
 import (
-	"database/sql"
-	"fmt"
-	"github.com/irahardianto/service-pattern-go/interfaces"
+	"github.com/irahardianto/service-pattern-go/models"
+	"gorm.io/driver/sqlite"
+	"gorm.io/gorm"
 )
 
 type SQLiteHandler struct {
-	Conn *sql.DB
+	conn *gorm.DB
 }
 
-func (handler *SQLiteHandler) Execute(statement string) {
-	handler.Conn.Exec(statement)
+func (handler *SQLiteHandler) migrateCreate(player models.Player) error {
+	var p models.Player
+	// If record can't be found, insert it
+	result := handler.conn.Where(
+		models.Player{Name: player.Name}).Attrs(
+		models.Player{Score: player.Score}).FirstOrCreate(&p)
+
+	return result.Error
 }
 
-func (handler *SQLiteHandler) Query(statement string) (interfaces.IRow, error) {
-	//fmt.Println(statement)
-	rows, err := handler.Conn.Query(statement)
-
-	if err != nil {
-		fmt.Println(err)
-		return new(SqliteRow),err
+func getMigrationData() []models.Player {
+	players := []models.Player{
+		{
+			Name:  "Rafael",
+			Score: 3,
+		},
+		{
+			Name:  "Roger",
+			Score: 2,
+		},
+		{
+			Name:  "Serena",
+			Score: 1,
+		},
+		{
+			Name:  "Maria",
+			Score: 0,
+		},
 	}
-	row := new(SqliteRow)
-	row.Rows = rows
-
-	return row, nil
+	return players
 }
 
-type SqliteRow struct {
-	Rows *sql.Rows
+func (handler *SQLiteHandler) Connection() *gorm.DB {
+	return handler.conn
 }
 
-func (r SqliteRow) Scan(dest ...interface{}) error {
-	err := r.Rows.Scan(dest...)
+func (handler *SQLiteHandler) Migrate() error {
+	// Create table if needed
+	err := handler.conn.AutoMigrate(&models.Player{})
 	if err != nil {
 		return err
 	}
 
-	return  nil
+	// Loop through and insert migration data
+	for _, p := range getMigrationData() {
+		err = handler.migrateCreate(p)
+		if err != nil {
+			return err
+		}
+	}
+
+	return nil
 }
 
-func (r SqliteRow) Next() bool {
-	return r.Rows.Next()
+func (handler *SQLiteHandler) ConnectSQLite(dsn string) error {
+	db, err := gorm.Open(sqlite.Open(dsn), &gorm.Config{
+		// TODO - turn this on?
+		//Logger: logger.Default.LogMode(logger.Silent)
+	})
+	if err != nil {
+		return err
+	}
+	handler.conn = db
+	return nil
 }

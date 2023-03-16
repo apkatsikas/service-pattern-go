@@ -4,6 +4,7 @@ import (
 	"sync"
 
 	"github.com/go-chi/chi"
+	"github.com/irahardianto/service-pattern-go/infrastructures/logutil"
 )
 
 type IChiRouter interface {
@@ -13,15 +14,19 @@ type IChiRouter interface {
 type router struct{}
 
 func (router *router) InitRouter() *chi.Mux {
-
+	// Setup controller
 	playerController := ServiceContainer().InjectPlayerController()
 
+	// Create router
 	r := chi.NewRouter()
 	r.HandleFunc("/getScore/{player1}/vs/{player2}", playerController.GetPlayerScore)
+
+	logutil.Info("Router initialized.")
 
 	return r
 }
 
+// Setup singleton
 var (
 	m          *router
 	routerOnce sync.Once

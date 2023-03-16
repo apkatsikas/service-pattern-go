@@ -8,21 +8,23 @@ type PlayerService struct {
 	interfaces.IPlayerRepository
 }
 
-func (service *PlayerService) GetScores(player1Name string, player2Name string) (string, error) {
-
+// Computes and returns score as a string, from the repository player's number values
+func (ps *PlayerService) GetScores(player1Name string, player2Name string) (string, error) {
 	baseScore := [4]string{"Love", "Fifteen", "Thirty", "Forty"}
 	var result string
 
-	player1, err := service.GetPlayerByName(player1Name)
+	// Get players
+	player1, err := ps.GetPlayerByName(player1Name)
 	if err != nil {
-		//Handle error
+		return "", err
 	}
 
-	player2, err := service.GetPlayerByName(player2Name)
+	player2, err := ps.GetPlayerByName(player2Name)
 	if err != nil {
-		//Handle error
+		return "", err
 	}
 
+	// Computer string score from players number scores
 	if player1.Score < 4 && player2.Score < 4 && !(player1.Score+player2.Score == 6) {
 
 		s := baseScore[player1.Score]

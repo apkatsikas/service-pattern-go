@@ -1,11 +1,7 @@
 package interfaces
 
-type IDbHandler interface {
-	Execute(statement string)
-	Query(statement string) (IRow, error)
-}
+import "gorm.io/gorm"
 
-type IRow interface {
-	Scan(dest ...interface{}) error
-	Next() bool
+type IDbHandler interface {
+	Connection() *gorm.DB
 }

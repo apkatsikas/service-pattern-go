@@ -2,49 +2,123 @@ package controllers
 
 import (
 	"encoding/json"
+	"errors"
+	"fmt"
+	"net/http"
 	"net/http/httptest"
+	"testing"
 
+	ce "github.com/irahardianto/service-pattern-go/customerrors"
 	"github.com/irahardianto/service-pattern-go/interfaces/mocks"
 	"github.com/irahardianto/service-pattern-go/viewmodels"
-
-	"testing"
 
 	"github.com/go-chi/chi"
 	"github.com/stretchr/testify/assert"
 )
 
-/*
-  Actual test functions
-*/
+const getScores = "GetScores"
+const routerPattern = "/getScore/{player1}/vs/{player2}"
+const recordNotFound = "Record not found."
 
-// TestSomething is an example of how to use our test object to
-// make assertions about some target code we are testing.
+func testRequest(player1 string, player2 string) *http.Request {
+	return httptest.NewRequest("GET",
+		fmt.Sprintf(
+			"http://localhost:8080/getScore/%v/vs/%v", player1, player2), nil)
+}
+
 func TestPlayerScore(t *testing.T) {
+	// names
+	player1Name := "Rafael"
+	player2Name := "Serena"
 
-	// create an instance of our test object
+	// expectations
+	expectedScore := "Forty-Fifteen"
+	expectedResult := viewmodels.ScoresVM{}
+	expectedResult.Score = expectedScore
+	expectedStatus := http.StatusOK
+
+	// setup mock service
 	playerService := new(mocks.IPlayerService)
-
-	// setup expectations
-	playerService.On("GetScores", "Rafael", "Serena").Return("Forty-Fifteen", nil)
-
+	playerService.On(getScores, player1Name, player2Name).Return(expectedScore, nil)
 	playerController := PlayerController{playerService}
 
-	// call the code we are testing
-	req := httptest.NewRequest("GET", "http://localhost:8080/getScore/Rafael/vs/Serena", nil)
+	// make the request
+	req := testRequest(player1Name, player2Name)
 	w := httptest.NewRecorder()
-
 	r := chi.NewRouter()
-	r.HandleFunc("/getScore/{player1}/vs/{player2}", playerController.GetPlayerScore)
-
+	r.HandleFunc(routerPattern, playerController.GetPlayerScore)
 	r.ServeHTTP(w, req)
 
-	expectedResult := viewmodels.ScoresVM{}
-	expectedResult.Score = "Forty-Fifteen"
-
+	// decode result
 	actualResult := viewmodels.ScoresVM{}
-
 	json.NewDecoder(w.Body).Decode(&actualResult)
 
-	// assert that the expectations were met
+	// check the value
 	assert.Equal(t, expectedResult, actualResult)
+	// check the status code
+	assert.Equal(t, expectedStatus, w.Result().StatusCode)
+}
+
+func TestPlayerScoreNoRecord(t *testing.T) {
+	// names
+	player1Name := "fake"
+	player2Name := "Rafael"
+
+	// expectations
+	expectedResult := ResponseError{}
+	expectedResult.Message = recordNotFound
+	expectedStatus := http.StatusNotFound
+
+	// setup mock service
+	playerService := new(mocks.IPlayerService)
+	playerService.On(getScores, player1Name, player2Name).Return("", ce.ErrRecordNotFound)
+	playerController := PlayerController{playerService}
+
+	// make the request
+	req := testRequest(player1Name, player2Name)
+	w := httptest.NewRecorder()
+	r := chi.NewRouter()
+	r.HandleFunc(routerPattern, playerController.GetPlayerScore)
+	r.ServeHTTP(w, req)
+
+	// decode the result
+	actualResult := ResponseError{}
+	json.NewDecoder(w.Body).Decode(&actualResult)
+
+	// check the value
+	assert.Equal(t, expectedResult, actualResult)
+	// check the status code
+	assert.Equal(t, expectedStatus, w.Result().StatusCode)
+}
+
+func TestPlayerScoreUnknownError(t *testing.T) {
+	// names
+	player1Name := "Rafael"
+	player2Name := "fake"
+
+	// expectations
+	expectedResult := ResponseError{}
+	expectedResult.Message = "Unexpected error."
+	expectedStatus := http.StatusInternalServerError
+
+	// setup mock service
+	playerService := new(mocks.IPlayerService)
+	playerService.On(getScores, player1Name, player2Name).Return("", errors.New("Weird error"))
+	playerController := PlayerController{playerService}
+
+	// make the request
+	req := testRequest(player1Name, player2Name)
+	w := httptest.NewRecorder()
+	r := chi.NewRouter()
+	r.HandleFunc(routerPattern, playerController.GetPlayerScore)
+	r.ServeHTTP(w, req)
+
+	// decode the result
+	actualResult := ResponseError{}
+	json.NewDecoder(w.Body).Decode(&actualResult)
+
+	// check the value
+	assert.Equal(t, expectedResult, actualResult)
+	// check the status code
+	assert.Equal(t, expectedStatus, w.Result().StatusCode)
 }
